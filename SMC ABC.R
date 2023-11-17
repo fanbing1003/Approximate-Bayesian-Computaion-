@@ -8,6 +8,8 @@ set.seed(13)
 # mu: Coral + 1
 # delta: Coral - 1, Starfish + 1
 # nu: Starfish -1 
+
+# Function to simulate data
 sim_Gillespie <- function(mu, delta, nu, C0 = 34, S0= 16,
                           times = seq(from = 0,to = 20, by = 2)){
   x = c(C0, S0)
@@ -21,6 +23,7 @@ sim_Gillespie <- function(mu, delta, nu, C0 = 34, S0= 16,
   return(data.frame(times=times, coral = states[,1], starfish = states[,2]))
 }
 
+# Summary statistic
 Euclidean_distance = function(observation, simulated){
   d = sum((observation$coral - simulated$coral)^2) + sum((observation$starfish - simulated$starfish)^2)
   return(d^(1/2))
@@ -32,6 +35,8 @@ alpha = 0.5
 st = 100
 # Draw N particle from prior, simulate data and calculate the Euclidean distance.
 N = 10000
+
+# Sample from prior
 theta = data.frame((matrix(ncol = 4, nrow = N)))
 colnames(theta) = c('mu', 'delta', 'nu', 'phi')
 theta$mu = runif(N)
@@ -73,12 +78,15 @@ while (epslion_max > epslion_Target){
 
   for (j in resample_num:N){
     for (k in 1:1000){
-      #  Simple RW for re-sample
+      # Simple RW for re-sample
       params = mvrnorm(1, c(mean_mu, mean_delta, mean_nu), cov)
+      # parameters must between 0 and 1
       if (sum(params < 0) > 0 | sum(params > 1) > 0){
         next
       }
+      # Simulation
       simulated = sim_Gillespie(params[1], params[2], params[3])
+      
       # Calculated MH acceptance rate
       if (Euclidean_distance(data, simulated) < epslion_t){
         theta$mu[j] = params[1]                
@@ -90,7 +98,7 @@ while (epslion_max > epslion_Target){
       }
     }
   }
-  #Rt = log(0.01)/log(1-accp/5000)
+  # Plot the result for current iteration and print the information for this iteration
   par(mfrow = c(1, 3))
   print(sprintf('Current Tolerance: %f', epslion_t))
   print(sprintf('MCMC Accepted New Sample Number %f', accep))
@@ -99,6 +107,8 @@ while (epslion_max > epslion_Target){
   plot(density(theta$nu),main ='nu')
   theta = theta[order(theta$phi), ]
   epslion_max = theta$phi[N]
+  
+  # Two stop rule
   if (epslion_max < epslion_Target){
     break
   }
