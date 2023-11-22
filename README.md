@@ -39,6 +39,8 @@ Algorithm 2: ABC MCMC
 11			μ_t=μ_(t-1),δ_t= δ_(t-1),ν_t=ν_(t-1),ψ^t=ψ^(t-1)  
 
 ## AMC SMC
+SMC ABC apply the idea of Sequential Monte Carlo. For more detail, please refer to the report.  
+
 Algorithm 3: SMC ABC  
 1	Set α, the percentage of particles kept each iteration. Define target closeness (tolerance), ϵ_T  
 2	Draw N particles from prior, simulate data and calculus the closeness. This obtains {μ_t,δ_t,ν_t 〖,ρ_t}〗_(t=1)^N.   
