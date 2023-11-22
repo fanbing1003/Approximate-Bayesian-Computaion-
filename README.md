@@ -7,4 +7,4 @@ A sensitive summary statistics can reflect the difference between two dataset we
 ## ABC Rejection
 ABC rejection is the easiest among all the algorithms in ABC. However, the efficiency is relative low.  
 We first draw the sample from proposal distribution, then use the sample to simulate data. 
-The similarity of two data set is calculated by the summary statistic.  
+The similarity of two data set is calculated by the summary statistic.  These steps obtain a set of particles { $\rho$, $\rho$}
