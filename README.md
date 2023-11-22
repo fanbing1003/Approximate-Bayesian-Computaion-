@@ -11,8 +11,41 @@ We first draw the sample from proposal distribution, then use the sample to simu
 The similarity of two data set is calculated by the summary statistic.  These steps obtain a set of particles { $\theta_i$, $\rho_i$} for i in 1, ..., N  
 Sorted the data by $\rho$ and drop the sample from largest $\rho$ until the it reach the threshold that given in adnvance.
 ABC rejection is commonly used to select the summary statistics. 
+Algorithm 1: ABC Rejection
+1	Define threshold, ϵ, target number of particle, T, initialise t = 1.
+2	While t < T do
+3		Draw μ_t,δ_t,ν_t from unif (0, 1)
+
+4		Simulate data, y, from Gillespie Algorithm 
+5		Calculate the closeness of Simulated data and observation, ϵ_t= ρ(y,x)
+
+6		If ϵ_t < threshold:
+7			store the particle {μ_t,δ_t,ν_t,ϵ_t}
+
+8			t = t + 1
 
 ## ABC MCMC
 ABC MCMC use the concept of MCMC to filter the samples.  
 The samples are still draw from proposal distribution and use to simulate the data. The similarity of simulated data and observed is still calculated by summary statistics to replace the likelihood.  
 Apply the Metropolis-Hasting ratio to calculate the acceptance rate. 
+Algorithm 2: ABC MCMC
+1	Draw μ_0,δ_0,ν_0 from unif(0, 1) and simulate x_0
+
+2	Calculus closeness ϵ_0=ρ(y,x_0)
+
+3	For t = 1 to N do
+4		Draw candidate μ^*,δ^*,ν^* from q(.|μ_(t-1),δ_(t-1),ν_(t-1))
+
+5		Simulate x_t according to μ^*,δ^*,ν^*
+
+6		Calculus closeness ψ_t=ρ(y,x_t) 
+
+7		Compute MH ratio r=  (π(μ^* )π(δ^* )π(ν^* ) ψ^* q(μ_(t-1),δ_(t-1),ν_(t-1) |μ^*,δ^*,ν^*))/(π(μ_(t-1) )π(δ_(t-1) )π(ν_(t-1) ) ψ^(t-1)  q(μ^*,δ^*,ν^* |μ_(t-1),δ_(t-1),ν_(t-1)))
+
+8		If U(0,1) < r then
+
+9			Accept candidate and ψ^t= ψ^*
+10		else
+11			μ_t=μ_(t-1),δ_t= δ_(t-1),ν_t=ν_(t-1),ψ^t=ψ^(t-1)
+
+## AMC SMC
