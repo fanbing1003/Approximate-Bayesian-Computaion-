@@ -57,3 +57,5 @@ Algorithm 3: SMC ABC
   
 13		If MCMC acceptance rate is too small   
 14			break  
+
+There is an small error in this algorithm. The next step are random selected not depend on previous stage.
